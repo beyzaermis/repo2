@@ -2,7 +2,7 @@
 title: "Hepsi"
 output: html_document
 ---
-
+[Beyza](https://github.com/beyzaermis)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
