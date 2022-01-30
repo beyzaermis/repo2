@@ -62,6 +62,33 @@ library(tidyr)
 
 
 
+```r
+data_provinces &lt;- read_excel("data/2013-2018.xlsx")
+```
+
+
+```r
+data_provinces$Hectare &lt;- gsub(",",".",data_provinces$Hectare) %&gt;% as.numeric()
+```
+
+
+
+```r
+data_9province &lt;- data_provinces %&gt;%
+        filter((Province == "Hatay" | 
+         Province== "Adana"|
+         Province == "İzmir" |
+         Province == "Antalya" |
+         Province == "Muğla" |
+         Province == "Mersin" |
+         Province == "Çanakkale" |
+         Province == "Kastamonu" |
+         Province == "Ankara") &amp; 
+         Year != "2013" &amp; 
+         Year != "2014" ) 
+```
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

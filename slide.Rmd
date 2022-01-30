@@ -50,7 +50,7 @@ library(tidyr)
 
 
 ```{r}
-data_provinces <- read_excel("datalar/2013-2018.xlsx")
+data_provinces <- read_excel("data/2013-2018.xlsx")
 ```
 
 ```{r, warning=F, message=F}
