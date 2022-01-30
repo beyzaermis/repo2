@@ -1,0 +1,76 @@
+---
+title: "slide"
+output: xaringan::moon_reader
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
+```
+
+
+
+
+Title Slide
+*	Title of project
+*	Team member names  
+İLK SAYFAYA BUNLARI YAZ
+
+
+---
+
+*	Introduction to Presentation
+---
+
+
+*	Project Goal & Societal Benefits
+
+
+
+
+---
+
+ *	Introduction of data & problem statement
+
+---
+```{r, warning=F, message=F}
+library(tidyverse)
+library(rvest)
+library(sf)
+library(leaflet)
+library(RColorBrewer)
+library(shiny)
+library(shinyjs)
+library(readr)
+library(readxl)
+library(ggplot2)
+library(tidyr)
+```
+
+---
+
+
+```{r}
+data_provinces <- read_excel("datalar/2013-2018.xlsx")
+```
+
+```{r, warning=F, message=F}
+data_provinces$Hectare <- gsub(",",".",data_provinces$Hectare) %>% as.numeric()
+```
+
+
+```{r}
+data_9province <- data_provinces %>%
+        filter((Province == "Hatay" | 
+         Province== "Adana"|
+         Province == "İzmir" |
+         Province == "Antalya" |
+         Province == "Muğla" |
+         Province == "Mersin" |
+         Province == "Çanakkale" |
+         Province == "Kastamonu" |
+         Province == "Ankara") & 
+         Year != "2013" & 
+         Year != "2014" ) 
+```
+
+---

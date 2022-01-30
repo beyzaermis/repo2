@@ -1,0 +1,145 @@
+---
+title: "Hepsi"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(rvest)
+library(sf)
+library(leaflet)
+library(RColorBrewer)
+library(shiny)
+library(shinyjs)
+library(readr)
+library(readxl)
+library(ggplot2)
+library(tidyr)
+```
+
+**GRAPH 1**
+```{r}
+data_provinces <- read_excel("data/2013-2018.xlsx")
+```
+
+```{r, warning=F, message=F}
+data_provinces$Hectare <- gsub(",",".",data_provinces$Hectare) %>% as.numeric()
+```
+
+
+```{r}
+data_9province <- data_provinces %>%
+        filter((Province == "Hatay" | 
+         Province== "Adana"|
+         Province == "İzmir" |
+         Province == "Antalya" |
+         Province == "Muğla" |
+         Province == "Mersin" |
+         Province == "Çanakkale" |
+         Province == "Kastamonu" |
+         Province == "Ankara") & 
+         Year != "2013" & 
+         Year != "2014" ) 
+```
+
+```{r}
+data_9province %>%
+  ggplot(aes(factor(Province), Hectare, fill = factor(Year)))+
+   geom_bar(stat="identity", position = "dodge") + 
+  scale_fill_brewer(palette = "Set1") +
+  xlab("Provinces") +
+  ylab("Hectares of Burned Areas") +
+  ggtitle("Wildfire Comparisons in Some Cities")+
+  labs(fill = "Year")
+  
+  
+```
+
+**GRAPH 2**
+```{r}
+data_cause2020 <- read_excel("data/causes-2020.xlsx")
+```
+
+```{r}
+ggplot(data_cause2020) +
+  geom_segment( aes(x=Cause, xend=Cause, y=0, yend=Value), color="grey") +
+  geom_point( aes(x=Cause, y=Value, color=Group), size=3 ) +
+  coord_flip()+
+ theme_light()+
+  theme(
+    legend.position = "none",
+    panel.border = element_blank(),
+    panel.spacing = unit(0.1, "lines"),
+    strip.text.x = element_text(size = 8)) +
+  xlab("Causes") +
+  ylab("Number of Forest Fires") +
+  ggtitle("Causes of Forest Fire in 2020")+
+  facet_wrap(~Group, ncol=1, scale="free_y")
+```
+
+**GRAPH 3**
+```{r}
+data_silvicultural <- read_excel("data/silvicultural.xlsx")
+```
+
+```{r}
+data_silvicultural$Total <- gsub(",",".",data_silvicultural$Total) %>% as.numeric()
+data_silvicultural <- data_silvicultural %>%
+  mutate(Ratio = round(data_silvicultural$Total/sum(data_silvicultural$Total)*100)) %>%
+  mutate(Percentage = paste("%",Ratio))
+```
+
+```{r}
+ggplot(data_silvicultural, aes(x="", y=Total, fill=Operation)) +
+  geom_bar(stat="identity", width=1, color="black") +
+  coord_polar("y", start=0) +
+  geom_text(aes(label = Percentage),
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_viridis_d() +
+  theme_void()+
+  ggtitle("Silvicultural evaluation of burned areas in 2020")+
+  labs(fill = "Silviculture Operations")
+```
+
+**GRAPH 4**
+```{r}
+data_foresttype <- read_excel("data/Forest Type.xlsx")
+```
+```{r}
+data_foresttype$`Total Hectare` <- gsub(",",".",data_foresttype$`Total Hectare`) %>% as.numeric()
+```
+
+```{r}
+data_foresttype <- data_foresttype %>%
+  mutate(Ratio = round(data_foresttype$`Total Hectare`/sum(data_foresttype$`Total Hectare`)*100)) %>%
+  mutate(Percentage = paste("%",Ratio))
+```
+
+
+```{r}
+ggplot(data = data_foresttype, aes(x = "", y = `Total Hectare`, fill = `Forest Type`))+
+  geom_bar(stat = "identity", color = "black",width = 1)+
+  coord_polar("y", start=0) +
+  geom_text(aes(label = Percentage),
+            position = position_stack(vjust = 0.4)) +
+  theme_void() +
+  ggtitle("Types of Forests Burning in 2020")
+```
+
+**GRAPH 5**
+```{r}
+data_33years <- read_excel("data/Forest Fires of 33 Years.xlsx")
+```
+
+```{r}
+data_33years %>%
+  tail(33) %>%
+  ggplot(aes(x=Year,y=`Total Hectare`, group = 1))+
+  geom_line( color="black")+
+  geom_point(shape=21, color="black", fill="red", size=3)+
+  ggtitle("Evolution of Total Forest Fires")
+```
